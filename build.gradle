@@ -1,0 +1,30 @@
+plugins {
+    id 'java'
+}
+
+group = 'com.flyaway.authcompass'
+version = '1.0.0'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        name = "papermc"
+        url = "https://repo.papermc.io/repository/maven-public/"
+    }
+    maven { url 'https://repo.codemc.org/repository/maven-public/' }
+}
+
+dependencies {
+    compileOnly 'io.papermc.paper:paper-api:1.21.8-R0.1-SNAPSHOT'
+    compileOnly("fr.xephi:authme:5.6.0-SNAPSHOT")
+}
+
+tasks.jar {
+    archiveBaseName.set("AuthCompass")
+}

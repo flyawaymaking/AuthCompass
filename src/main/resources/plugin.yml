@@ -1,0 +1,9 @@
+name: AuthCompass
+version: 1.0.0
+main: com.flyaway.authcompass.AuthCompassPlugin
+api-version: 1.21
+description: Плагин для перехода на сервер выживания через VelocityConnect
+author: FlyAwayMaking
+website: https://github.com/flyawaymaking
+depend: [AuthMe]
+commands: {}
