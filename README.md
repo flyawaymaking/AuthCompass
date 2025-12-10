@@ -1,6 +1,6 @@
 # 🧭 AuthCompass
 
-**AuthCompass** — это плагин для Minecraft (Paper 1.21.8), который работает совместно с **AuthMe** и **VelocityConnect**.  
+**AuthCompass** — это плагин для Minecraft (Paper 1.21.10), который работает совместно с **AuthMe** и **VelocityConnect**.  
 После успешной авторизации через AuthMe плагин выдаёт игроку **компас**, который при нажатии подключает его к серверу **survival**.
 
 ---
