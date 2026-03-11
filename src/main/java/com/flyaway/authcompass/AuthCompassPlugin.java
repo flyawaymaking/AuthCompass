@@ -32,6 +32,9 @@ public class AuthCompassPlugin extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         this.getServer().getMessenger().registerOutgoingPluginChannel(this, "velocity:player");
+        this.getServer().getMessenger().registerIncomingPluginChannel(this, "authcompass:reload", (channel, player, bytes) -> {
+            Bukkit.getScheduler().runTask(this, this::onSurvivalReloaded);
+        });
         getServer().getPluginManager().registerEvents(this, this);
         getLogger().info("AuthCompass включен!");
     }
@@ -178,6 +181,25 @@ public class AuthCompassPlugin extends JavaPlugin implements Listener {
                     player.sendMessage(ChatColor.RED + "Ошибка при подключении к серверу!");
                 }
             });
+        }
+    }
+
+    private void onSurvivalReloaded() {
+        notifyServerOnline();
+        autoReconnectPlayers();
+    }
+
+    private void notifyServerOnline() {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            player.sendMessage(ChatColor.GREEN + "Сервер Survival снова доступен!");
+        }
+    }
+
+    private void autoReconnectPlayers() {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (player.hasPermission("rejoin.reloaded")) {
+                sendToServer(player, "survival");
+            }
         }
     }
 }
