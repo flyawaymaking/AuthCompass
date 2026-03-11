@@ -25,13 +25,15 @@ import java.util.Set;
 import java.util.UUID;
 
 public class AuthCompassPlugin extends JavaPlugin implements Listener {
-
+    private SurvivalNotifierServer notifier;
     private final Set<UUID> cooldownPlayers = new HashSet<>();
     private static final long COOLDOWN_MS = 2000; // 2 секунды cooldown
 
     @Override
     public void onEnable() {
         this.getServer().getMessenger().registerOutgoingPluginChannel(this, "velocity:player");
+        notifier = new SurvivalNotifierServer(this);
+        notifier.start(38123);
         getServer().getPluginManager().registerEvents(this, this);
         getLogger().info("AuthCompass включен!");
     }
@@ -40,6 +42,7 @@ public class AuthCompassPlugin extends JavaPlugin implements Listener {
     public void onDisable() {
         this.getServer().getMessenger().unregisterOutgoingPluginChannel(this);
         cooldownPlayers.clear();
+        notifier.stop();
     }
 
     @EventHandler
@@ -80,8 +83,8 @@ public class AuthCompassPlugin extends JavaPlugin implements Listener {
         ItemMeta meta = compass.getItemMeta();
         meta.setDisplayName(ChatColor.AQUA + "Выбор сервера");
         meta.setLore(Arrays.asList(
-            ChatColor.GRAY + "Нажмите, чтобы перейти",
-            ChatColor.GRAY + "на сервер выживания"
+                ChatColor.GRAY + "Нажмите, чтобы перейти",
+                ChatColor.GRAY + "на сервер выживания"
         ));
         compass.setItemMeta(meta);
         return compass;
@@ -117,7 +120,7 @@ public class AuthCompassPlugin extends JavaPlugin implements Listener {
         }
         ItemMeta meta = item.getItemMeta();
         return meta.hasDisplayName() &&
-               meta.getDisplayName().equals(ChatColor.AQUA + "Выбор сервера");
+                meta.getDisplayName().equals(ChatColor.AQUA + "Выбор сервера");
     }
 
     @EventHandler
@@ -179,5 +182,15 @@ public class AuthCompassPlugin extends JavaPlugin implements Listener {
                 }
             });
         }
+    }
+
+    public void onSurvivalReloaded() {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            player.sendMessage(ChatColor.GREEN + "Сервер Survival снова доступен!");
+            if (player.hasPermission("rejoin.reloaded")) {
+                sendToServer(player, "survival");
+            }
+        }
+        getLogger().info("Игроки уведомлены о запуске Survival.");
     }
 }
